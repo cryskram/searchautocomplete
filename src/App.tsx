@@ -1,10 +1,15 @@
-import React, { EventHandler, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import UserCard from "./components/UserCard";
 
 interface UserProp {
   firstName: string;
   id: number;
   image: string;
+  age: number;
+  company: {
+    department: string;
+  };
+  username: string;
 }
 
 interface UsersData {
@@ -17,10 +22,9 @@ interface UsersData {
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<unknown[]>([]);
-  const [error, setError] = useState(null);
   const [param, setParam] = useState("");
-  const [showDropdown, setShowDropdown] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState<unknown[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleChange = (event: any) => {
     const query = event.target.value.toLowerCase();
@@ -30,7 +34,8 @@ const App = () => {
       const filteredData =
         users && users.length
           ? users.filter(
-              (item) => item.firstName.toLowerCase().indexOf(query) > -1
+              (item: UserProp) =>
+                item.firstName.toLowerCase().indexOf(query) > -1
             ) // checks if it is present or not
           : [];
 
@@ -56,7 +61,6 @@ const App = () => {
     } catch (error: any) {
       setLoading(false);
       console.log(error);
-      setError(error);
     }
   };
 
@@ -66,8 +70,12 @@ const App = () => {
 
   console.log(
     users,
-    filteredUsers.map((item) => item.firstName)
+    filteredUsers.map((item: UserProp) => item.firstName)
   );
+
+  if (loading) {
+    return <div>Loading</div>;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center w-full p-4">
@@ -84,14 +92,14 @@ const App = () => {
       />
       {param ? (
         <div className="grid grid-cols-1 md:grid-cols-3">
-          {filteredUsers.length > 0 ? (
+          {showDropdown ? (
             <div>
-              {filteredUsers.map((user, idx) => (
+              {filteredUsers.map((user: UserProp, idx) => (
                 <UserCard
                   key={idx}
                   name={user.firstName}
                   age={user.age}
-                  work={user.birthday}
+                  work={user.company.department}
                   username={user.username}
                   image={user.image}
                 />
@@ -105,7 +113,7 @@ const App = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3">
-          {users.map((user, idx) => (
+          {users.map((user: UserProp, idx) => (
             <UserCard
               key={idx}
               name={user.firstName}
