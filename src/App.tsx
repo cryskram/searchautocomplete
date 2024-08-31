@@ -26,7 +26,7 @@ const App = () => {
   const [filteredUsers, setFilteredUsers] = useState<unknown[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const handleChange = (event: any) => {
+  const handleChange = (event) => {
     const query = event.target.value.toLowerCase();
     setParam(query);
 
@@ -58,7 +58,7 @@ const App = () => {
         // setUsers(data.users.map((item: UserProp) => item.firstName));
         setLoading(false);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       setLoading(false);
       console.log(error);
     }
